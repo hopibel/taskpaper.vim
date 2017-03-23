@@ -323,6 +323,10 @@ function! taskpaper#update_project()
     let indent = matchstr(getline("."), '^\t*')
     let depth = len(indent)
 
+    if depth == 0
+        return
+    endif
+
     let projects = []
 
     for linenr in range(line('.'), 1, -1)
