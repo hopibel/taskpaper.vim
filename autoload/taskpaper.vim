@@ -331,7 +331,7 @@ function! taskpaper#update_project()
 
     for linenr in range(line('.'), 1, -1)
         let line = getline(linenr)
-        let ml = matchlist(line, '\v^\t{0,' . depth . '}([^\t:]+):')
+        let ml = matchlist(line, '\v^\t{0,' . depth . '}([^\t:]+):(\s+\@[^ \t\(]+(\([^\)]*\))?)*$')
         if empty(ml)
             continue
         endif
