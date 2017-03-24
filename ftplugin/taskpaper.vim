@@ -25,12 +25,12 @@ endif
 " When moving a task, should the cursor follow or stay in the same place
 " (default: follow)
 if !exists('g:task_paper_follow_move')
-    let g:task_paper_follow_move = 1 
+    let g:task_paper_follow_move = 1
 endif
 
 " Hide @done tasks when searching tags
 if !exists('g:task_paper_search_hide_done')
-    let g:task_paper_search_hide_done = 0 
+    let g:task_paper_search_hide_done = 0
 endif
 
 " Add '@' to keyword character set so that we can complete contexts as keywords
@@ -82,10 +82,10 @@ if !exists("no_plugin_maps") && !exists("no_taskpaper_maps")
     nnoremap <silent> <buffer> <Plug>TaskPaperMoveToProject
     \       :call taskpaper#move_to_project()<CR>
 
-    nnoremap <silent> <buffer> <Plug>TaskPaperNewline
-    \       o<C-r>=taskpaper#newline()<CR>
-    inoremap <silent> <buffer> <Plug>TaskPaperNewline
-    \       <CR><C-r>=taskpaper#newline()<CR>
+    nnoremap <expr> <silent> <buffer> <Plug>TaskPaperNewline
+    \       &formatoptions =~# 'o' ? 'o<C-r>=taskpaper#newline()<CR>' : 'o'
+    inoremap <expr> <silent> <buffer> <Plug>TaskPaperNewline
+    \       &formatoptions =~# 'r' ? '<CR><C-r>=taskpaper#newline()<CR>' : '<CR>'
 
     nmap <buffer> <Leader>tp <Plug>TaskPaperFoldProjects
     nmap <buffer> <Leader>t. <Plug>TaskPaperFoldNotes
