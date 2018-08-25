@@ -34,9 +34,13 @@ if !exists('g:task_paper_search_hide_done')
 endif
 
 " Archive only top-level tasks. Don't archive children unless parent is done
-" (default: off)
 if !exists('g:task_paper_archive_top_level')
-	let g:task_paper_archive_top_level = 0
+	let g:task_paper_archive_top_level = 1
+endif
+
+" Auto-format lists while typing (default: off)
+if !exists('g:task_paper_autoformat_lists')
+	let g:task_paper_autoformat_lists = 0
 endif
 
 " Add '@' to keyword character set so that we can complete contexts as keywords
@@ -46,8 +50,10 @@ setlocal iskeyword+=@-@
 setlocal noexpandtab
 
 " Change 'comments' and 'formatoptions' to continue to write a task item
-setlocal comments=b:-
-setlocal fo-=c fo+=rol
+if g:task_paper_autoformat_lists == 1
+	setlocal comments=b:-
+	setlocal fo-=c fo+=rol
+endif
 
 " Set 'autoindent' to maintain indent level
 setlocal autoindent
@@ -89,9 +95,9 @@ if !exists("no_plugin_maps") && !exists("no_taskpaper_maps")
     \       :call taskpaper#move_to_project()<CR>
 
     nnoremap <expr> <silent> <buffer> <Plug>TaskPaperNewline
-    \       &formatoptions =~# 'o' ? 'o<C-r>=taskpaper#newline()<CR>' : 'o'
+    \       o<C-r>=taskpaper#newline()<CR>
     inoremap <expr> <silent> <buffer> <Plug>TaskPaperNewline
-    \       &formatoptions =~# 'r' ? '<CR><C-r>=taskpaper#newline()<CR>' : '<CR>'
+    \       <CR><C-r>=taskpaper#newline()<CR>
 
     nmap <buffer> <Leader>tp <Plug>TaskPaperFoldProjects
     nmap <buffer> <Leader>t. <Plug>TaskPaperFoldNotes
@@ -112,11 +118,13 @@ if !exists("no_plugin_maps") && !exists("no_taskpaper_maps")
     nmap <buffer> <Leader>tx <Plug>TaskPaperToggleCancelled
     nmap <buffer> <Leader>tm <Plug>TaskPaperMoveToProject
 
-    if mapcheck("o", "n") == ''
-        nmap <buffer> o <Plug>TaskPaperNewline
-    endif
-    if mapcheck("\<CR>", "i") == ''
-        imap <buffer> <CR> <Plug>TaskPaperNewline
+    if g:task_paper_autoformat_lists == 1
+        if mapcheck("o", "n") == ''
+            nmap <buffer> o <Plug>TaskPaperNewline
+        endif
+        if mapcheck("\<CR>", "i") == ''
+            imap <buffer> <CR> <Plug>TaskPaperNewline
+        endif
     endif
 endif
 
