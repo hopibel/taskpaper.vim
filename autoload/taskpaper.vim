@@ -376,6 +376,23 @@ function! taskpaper#archive_done()
             break
         endif
 
+		" archive top level tasks only
+		if g:task_paper_archive_top_level == 1
+			let indent = matchstr(getline('.'), '^\t*')
+			let depth = len(indent)
+
+			" check if top level
+			if depth > 0
+				let pproject = search('\v^\t{' . (depth-1) . '}[^:]+:(\s+\@[^\s\(]+(\([^\)]*\))?)*$', 'bnW')
+				let ptask = search('\v^\t{' . (depth-1) . '}-\s+', 'bnW')
+
+				" skip if subtask
+				if ptask > pproject
+					continue
+				endif
+			endif
+		endif
+
         call taskpaper#update_project()
         let deleted += taskpaper#delete(lnum, 'A', 1)
     endwhile
@@ -388,6 +405,23 @@ function! taskpaper#archive_done()
             if lnum == 0
                 break
             endif
+
+			" archive top level tasks only
+			if g:task_paper_archive_top_level == 1
+				let indent = matchstr(getline('.'), '^\t*')
+				let depth = len(indent)
+
+				" check if top level
+				if depth > 0
+					let pproject = search('\v^\t{' . (depth-1) . '}[^:]+:(\s+\@[^\s\(]+(\([^\)]*\))?)*$', 'bnW', archive_end)
+					let ptask = search('\v^\t{' . (depth-1) . '}-\s+', 'bnW', archive_end)
+
+					" skip if subtask
+					if ptask > pproject
+						continue
+					endif
+				endif
+			endif
 
             call taskpaper#update_project()
             let deleted += taskpaper#delete(lnum, 'A', 1)

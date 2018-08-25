@@ -33,6 +33,12 @@ if !exists('g:task_paper_search_hide_done')
     let g:task_paper_search_hide_done = 0
 endif
 
+" Archive only top-level tasks. Don't archive children unless parent is done
+" (default: off)
+if !exists('g:task_paper_archive_top_level')
+	let g:task_paper_archive_top_level = 0
+endif
+
 " Add '@' to keyword character set so that we can complete contexts as keywords
 setlocal iskeyword+=@-@
 
